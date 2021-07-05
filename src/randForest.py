@@ -21,33 +21,6 @@ dirname = os.path.dirname(__file__)
 def path(rel):
     return os.path.join(dirname, rel)
 
-def monthToNum(shortMonth):
-    return {
-            'jan': 1,
-            'feb': 2,
-            'mar': 3,
-            'apr': 4,
-            'may': 5,
-            'jun': 6,
-            'jul': 7,
-            'aug': 8,
-            'sep': 9, 
-            'oct': 10,
-            'nov': 11,
-            'dec': 12
-    }[shortMonth]
-
-def dayToNum(shortDay):
-    return {
-            'mon': 1,
-            'tue': 2,
-            'wed': 3,
-            'thu': 4,
-            'fri': 5,
-            'sat': 6,
-            'sun': 7
-    }[shortDay]
-
 # Input data
 df= pd.read_csv(path("./../dat/forest_fires.csv"))
 print(df.head())
@@ -74,10 +47,10 @@ df = df.drop(drop_elements, axis = 1)
 print(df.describe())
 
 
-plt.figure()
-plt.plot(range(len(df['area'])), df['area'])
-plt.yscale('log')
-plt.show()
+# plt.figure()
+# plt.plot(range(len(df['area'])), df['area'])
+# plt.yscale('log')
+# plt.show()
 
 #
 # Split incoming data
@@ -97,17 +70,17 @@ from sklearn.ensemble import RandomForestRegressor
 ## Random Forest
 ## 
 plt.figure()
-rf = RandomForestRegressor (max_features=100)
+rf = RandomForestRegressor ()
 rf.fit(x,y) # x is train data, y is target data
 importances = pd.DataFrame({'feature':x.columns,'importance':np.round(rf.feature_importances_,3)})
 importances = importances.sort_values('importance',ascending=False).set_index('feature')
-importances.head(25).plot(kind='bar',figsize=(30,20),alpha=1,width = 0.8,facecolor = 'yellowgreen',edgecolor = 'white',lw=1,fontsize=40)
+importances.head(25).plot(kind='bar',alpha=1,width = 0.8,facecolor = 'yellowgreen',edgecolor = 'white',lw=1)
 plt.tick_params(labelsize=18)
-font1 = {'family': 'Times New Roman','weight': 'normal','size': 50,}
+font1 = {'family': 'Times New Roman','weight': 'normal'}
 legend = plt.legend(prop=font1)
-font2 = {'family': 'Times New Roman','weight': 'normal','size': 50,}
+font2 = {'family': 'Times New Roman','weight': 'normal'}
 plt.xlabel('Features', font2)
-font3 = {'family': 'Times New Roman','weight': 'normal','size': 50,}
+font3 = {'family': 'Times New Roman','weight': 'normal'}
 plt.ylabel('Correlation', font3)
 
 plt.show()
