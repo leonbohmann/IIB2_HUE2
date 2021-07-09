@@ -1,3 +1,5 @@
+from math import sqrt
+from numpy.core.fromnumeric import mean
 import pandas as pd
 import numpy as np
 import re
@@ -40,17 +42,11 @@ print(df.describe())
 
 # Abandoning features that don't make sense.
 #x1,x2,x3 are the name of features
-drop_elements = ['FFMC', 'DMC', 'DC', 'ISI']
+drop_elements = ['FFMC', 'DMC', 'DC', 'ISI','X','Y']
 df = df.drop(drop_elements, axis = 1)
 
 # show description of data that is left
 print(df.describe())
-
-
-# plt.figure()
-# plt.plot(range(len(df['area'])), df['area'])
-# plt.yscale('log')
-# plt.show()
 
 #
 # Split incoming data
@@ -72,15 +68,20 @@ from sklearn.ensemble import RandomForestRegressor
 plt.figure()
 rf = RandomForestRegressor ()
 rf.fit(x,y) # x is train data, y is target data
-importances = pd.DataFrame({'feature':x.columns,'importance':np.round(rf.feature_importances_,3)})
-importances = importances.sort_values('importance',ascending=False).set_index('feature')
-importances.head(25).plot(kind='bar',alpha=1,width = 0.8,facecolor = 'yellowgreen',edgecolor = 'white',lw=1)
-plt.tick_params(labelsize=18)
-font1 = {'family': 'Times New Roman','weight': 'normal'}
-legend = plt.legend(prop=font1)
-font2 = {'family': 'Times New Roman','weight': 'normal'}
-plt.xlabel('Features', font2)
-font3 = {'family': 'Times New Roman','weight': 'normal'}
-plt.ylabel('Correlation', font3)
+score = rf.score(x_test, y_test)
+print(score)
+# importances = pd.DataFrame({'feature':x.columns,'importance':np.round(rf.feature_importances_,3)})
+# importances = importances.sort_values('importance',ascending=False).set_index('feature')
+# importances.head(25).plot(kind='bar',alpha=1,width = 0.8,facecolor = 'yellowgreen',edgecolor = 'white',lw=1)
+# plt.tick_params(labelsize=18)
+# font1 = {'family': 'Times New Roman','weight': 'normal'}
+# legend = plt.legend(prop=font1)
+# font2 = {'family': 'Times New Roman','weight': 'normal'}
+# plt.xlabel('Features', font2)
+# font3 = {'family': 'Times New Roman','weight': 'normal'}
+# plt.ylabel('Correlation', font3)
 
-plt.show()
+# plt.show()
+
+# result = rf.predict(np.array([8,6,7,2,28.2,29,1.8,0]).reshape(1,-1)) # result should be 5.86
+# print(result)
