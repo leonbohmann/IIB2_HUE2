@@ -16,9 +16,9 @@ model.add(Activation('elu'))
 model.add(Dense(1))
 model.summary()
 
-learning_rate=0.001
-optimizer = opti.RMSprop(lr=learning_rate)
-model.compile(optimizer=optimizer,loss='mse', metrics=['accuracy'])
+# apply a learning rate to the model compiler
+optim = opti.RMSprop(lr=0.001)
+model.compile(optimizer=optim,loss='mse', metrics=['accuracy'])
 
 # path operations
 import os
@@ -30,6 +30,7 @@ def path(rel):
 df= pd.read_csv(path("./../dat/forest_fires.csv"))
 print(df.head())
 print(df.describe())
+df['area']=np.log10(df['area']+1)
 
 #
 # Split incoming data
@@ -37,11 +38,12 @@ print(df.describe())
 from sklearn.model_selection import train_test_split
 x = df.drop(['area'],axis=1)
 y = df['area']
-x_train, x_test, y_train, y_test = train_test_split(x,y,test_size=0.2)
+# take 20% of data for testing
+x_train, x_test, y_train, y_test = train_test_split(x,y,test_size=0.4)
 
-data=x_train
-target = y_train
-model.fit(data, target, epochs=100, batch_size=10,verbose=1, validation_data=(x_test,y_test))
+# fit model with available data
+model.fit(x_train, y_train, epochs=100, batch_size=10,verbose=1, validation_data=(x_test,y_test))
 
-a=model.predict(x_test)
-print("RMSE for Deep Network:",np.sqrt(np.mean((y_test-a.reshape(a.size,))**2)))
+# test the model
+nn_result = model.predict(x_test)
+print("RMSE for Deep Network:",np.sqrt(np.mean((y_test-nn_result.reshape(nn_result.size,))**2)))
